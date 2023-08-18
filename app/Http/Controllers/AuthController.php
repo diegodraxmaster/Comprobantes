@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -19,17 +20,16 @@ class AuthController extends Controller
     }
     function login(Request $request)
     {
+
         $credentials = $request->only('email', 'password');
-
         if (!Auth::attempt($credentials)) {
-            // Autenticación exitosa
-            return response()->json(['message' => 'Credenciales incorrectas'], 401);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error en el inicio de sesión. Credenciales incorrectas.',
+            ], 401);
         }
-        //dd($user);
         $user = User::where('email', $request->email)->first();
-
         $token = $user->createToken('token')->plainTextToken;
-        //dd($token);
         return response()->json([
             'status' => true,
             'message' => 'Logeo Exitoso',

@@ -13,21 +13,13 @@ return new class extends Migration
     {
         Schema::create('comprobantes', function (Blueprint $table) {
             $table->id();
-            $table->string('tipo_comprobante');
-            $table->string('serie');
-            $table->string('numero');
+            $table->string('tipo_comprobante', 10);
+            $table->string('numero_comprobante', 15);
             $table->date('fecha_emision');
-            $table->date('fecha_vencimiento')->nullable();
             $table->decimal('monto_total', 10, 2);
-            $table->decimal('monto_subtotal', 10, 2);
-            $table->decimal('monto_igv', 10, 2);
-            $table->string('tipo_moneda');
-            $table->unsignedBigInteger('cliente_id');
-            $table->string('estado_pago');
-            $table->string('adjunto')->nullable();
+            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->foreignId('customer_id')->constrained('customers');
             $table->timestamps();
-
-            $table->foreign('cliente_id')->references('id')->on('clientes');
         });
     }
 
